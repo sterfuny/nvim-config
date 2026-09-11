@@ -49,7 +49,18 @@ end
 --- Parser installer
 --------------------------------------------------------------------------------
 
--- TODO: archived, replace with a new fork?
+---@type nvim-ts.parsers
+local CustomedParsers = {
+  yara = {
+    install_info = {
+      url = 'https://github.com/egibs/tree-sitter-yara',
+      revision = 'eb3ede203275c38000177f72ec0f9965312806ef',
+      queries = 'queries',
+    },
+    tier = 2,
+  },
+}
+
 ---@type LazyPluginSpec
 local TreeSitter = {
   'nvim-treesitter/nvim-treesitter',
@@ -67,6 +78,14 @@ local TreeSitter = {
         callback = safe_ts_start,
       })
     end
+    vim.api.nvim_create_autocmd('User', {
+      pattern = 'TSUpdate',
+      callback = function()
+        for lang, info in pairs(CustomedParsers) do
+          require 'nvim-treesitter.parsers'[lang] = info
+        end
+      end,
+    })
   end,
   config = function(_, opts)
     local TS = require 'nvim-treesitter'

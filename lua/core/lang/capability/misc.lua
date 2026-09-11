@@ -41,6 +41,7 @@ return {
       'vim',
       'vimdoc',
       'yaml',
+      'yara',
       'xml',
     },
     treesitter = true,
