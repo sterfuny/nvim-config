@@ -30,10 +30,12 @@ map(
 map('n', '<leader>sr', function()
   local sm = require 'core.persist'
   vim.ui.input(
-    { prompt = 'Rename Session:', text = sm.current() },
+    { prompt = 'Rename Session:', default = sm.current() },
     function(input)
-      if input or input == '' then
+      if input and input ~= '' then
         sm.rename(input)
+      else
+        vim.notify('Invalid name, nothing changed', vim.log.levels.INFO)
       end
     end
   )

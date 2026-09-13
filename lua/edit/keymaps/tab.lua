@@ -1,5 +1,4 @@
 local map = vim.keymap.set
-local bind = require 'utils.fnx'.bind
 
 ----------------------------------------------------------------------------
 -- Tab related
@@ -39,20 +38,23 @@ map({ 'n' }, '<leader>ta', '<cmd>tabnew %<cr>', {
   desc = '[A]dd With Current Buffer',
 })
 
-map(
-  { 'n' },
-  '<leader>tr',
-  bind(vim.ui.input, { prompt = 'New Tab Name' }, function(input)
-    if input or input == '' then
-      require 'core.bpm'.rename_tab(vim.api.nvim_get_current_tabpage(), input)
+map({ 'n' }, '<leader>tr', function()
+  local bpm = require 'core.bpm'
+  vim.ui.input({
+    prompt = 'New Tab Name',
+    default = bpm.resolve_tabname(vim.api.nvim_get_current_tabpage()),
+  }, function(input)
+    if input and input ~= '' then
+      bpm.rename_tab(vim.api.nvim_get_current_tabpage(), input)
+    else
+      vim.notify('Invalid name, nothing changed', vim.log.levels.INFO)
     end
-  end),
-  {
-    noremap = true,
-    silent = true,
-    desc = '[R]ename',
-  }
-)
+  end)
+end, {
+  noremap = true,
+  silent = true,
+  desc = '[R]ename',
+})
 
 map(
   { 'n' },
