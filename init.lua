@@ -127,6 +127,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
   once = true,
   callback = function()
     require 'edit.fold'.setup()
+    require 'edit.punc-conv'.setup()
     require 'edit.diagnostic'.setup()
   end,
 })
