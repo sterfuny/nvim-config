@@ -123,12 +123,19 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 -- This should be initialized when buffer enter
+-- NOTE: `nvim_create_autocmd` with multiple events, and `once` flag
+-- creats one-shot autocmds for each event.
+local _done1 = false
 vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
   once = true,
   callback = function()
+    if _done1 then
+      return
+    end
     require 'edit.fold'.setup()
     require 'edit.punc-conv'.setup()
     require 'edit.diagnostic'.setup()
+    _done1 = true
   end,
 })
 
